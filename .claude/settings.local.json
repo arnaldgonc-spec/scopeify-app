@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import base64; data = open\\('/c/Users/Arnaldo/Documents/Arnaldo/Trabalho/Scopeify/Scopeify_logo.png','rb'\\).read\\(\\); print\\('data:image/png;base64,' + base64.b64encode\\(data\\).decode\\(\\)\\)\")",
+      "Bash(node -e \"const fs=require\\('fs'\\); const data=fs.readFileSync\\('/c/Users/Arnaldo/Documents/Arnaldo/Trabalho/Scopeify/Scopeify_logo.png'\\); console.log\\('data:image/png;base64,'+data.toString\\('base64'\\)\\);\")",
+      "Bash(node *)",
+      "PowerShell(Copy-Item *)",
+      "Bash(npx tsc *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Arnaldo\\\\Documents\\\\Arnaldo\\\\Trabalho\\\\scopeify-app\" -Recurse -Directory -Name)",
+      "Bash(Select-Object -First 50)",
+      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")"
+    ]
+  }
+}

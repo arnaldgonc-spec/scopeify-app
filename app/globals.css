@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --nd: #141e47;
+  --nv: #1b2a5e;
+  --nm: #243272;
+  --sv: #b4c8dc;
+  --sl: #d4e4f0;
+  --sdim: rgba(180, 200, 220, 0.12);
+  --wh: #ffffff;
+  --fg: #eef1f7;
+  --rl: #dde3ed;
+  --ink: #1a2340;
+  --ir: #4a5a7a;
+  --mt: #7888a8;
+  --ok: #15803d;
+  --err: #b91c1c;
+  --amb: #b45309;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-radius: 0 !important;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: 'Barlow', sans-serif;
+  color: var(--ink);
+  background: #e2e7f0;
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: 'Barlow', sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--rl); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in { animation: fadeIn 0.2s ease; }
+.hex-clip { clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); }
