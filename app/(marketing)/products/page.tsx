@@ -65,6 +65,9 @@ export default function Page() {
             Month-to-month, cancel anytime. Every plan includes the full PDF
             generator — pick the level of estimating muscle you need on top.
           </p>
+          <p className="mt-4 text-[var(--sv)] max-w-2xl mx-auto text-sm">
+            Backed by our <span className="text-[var(--wh)] font-semibold">2-Month 100% Money-Back Guarantee</span> — if you don't love it, we'll refund every cent.
+          </p>
         </div>
       </section>
 
@@ -122,10 +125,6 @@ export default function Page() {
               </Link>
             </div>
           ))}
-        </div>
-
-        <div className="mt-16 text-center text-sm text-[var(--ir)]">
-          Need more than Full Assessment? <Link href="/about" className="text-[var(--nd)] font-semibold underline underline-offset-4">Talk to us about Enterprise</Link>.
         </div>
       </section>
     </>

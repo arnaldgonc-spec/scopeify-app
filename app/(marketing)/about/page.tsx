@@ -18,25 +18,6 @@ const VALUES = [
 export default function Page() {
   return (
     <>
-      <section className="bg-[var(--nd)] text-[var(--wh)]">
-        <div className="mx-auto max-w-7xl px-6 py-20">
-          <div className="text-xs uppercase tracking-widest text-[var(--sv)]">
-            About Us
-          </div>
-          <h1
-            className="mt-4 text-5xl md:text-6xl max-w-3xl"
-            style={{ fontFamily: 'Bebas Neue, sans-serif' }}
-          >
-            We're builders for the people who build the roof over your head
-          </h1>
-          <p className="mt-6 text-lg text-[var(--sl)] max-w-2xl">
-            Scopeify is a small, focused team building modern software for the
-            commercial roofing industry — an industry that's quietly enormous
-            and still running on Word docs and faxed PDFs.
-          </p>
-        </div>
-      </section>
-
       <section className="mx-auto max-w-7xl px-6 py-20 grid md:grid-cols-2 gap-12 items-start">
         <div>
           <h2

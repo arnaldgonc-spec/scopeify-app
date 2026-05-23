@@ -8,22 +8,24 @@ const NAV = [
   { href: '/about', label: 'About Us' },
 ];
 
+// Matches the background of /public/Scopeify_Logo_Inversed_v2.png so the
+// logo blends seamlessly into the navbar/footer.
+const LOGO_BG = '#141e47';
+
 export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-full flex flex-col bg-[var(--fg)] text-[var(--ink)]">
-      <header className="sticky top-0 z-40 bg-[var(--nd)] text-[var(--wh)] border-b border-[var(--nm)]">
+      <header
+        className="sticky top-0 z-40 text-[var(--wh)] border-b border-[var(--nm)]"
+        style={{ background: LOGO_BG }}
+      >
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-          <Link href="/home" className="flex items-center gap-2">
-            <span
-              className="inline-block w-8 h-8 bg-[var(--sv)] hex-clip"
-              aria-hidden
+          <Link href="/home" className="flex items-center" aria-label="Scopeify home">
+            <img
+              src="/Scopeify_Logo_Inversed_v2.png"
+              alt="Scopeify"
+              style={{ height: 40, width: 'auto', display: 'block' }}
             />
-            <span
-              className="text-2xl tracking-widest"
-              style={{ fontFamily: 'Bebas Neue, sans-serif' }}
-            >
-              SCOPEIFY
-            </span>
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             {NAV.map((item) => (
@@ -47,7 +49,7 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
               href="/login"
               className="px-4 py-2 text-sm font-semibold bg-[var(--sv)] text-[var(--nd)] hover:bg-[var(--sl)] transition-colors"
             >
-              Start free trial
+              Get Started
             </Link>
           </div>
         </div>
@@ -55,15 +57,17 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
 
       <main className="flex-1">{children}</main>
 
-      <footer className="bg-[var(--nd)] text-[var(--sl)] mt-24">
+      <footer
+        className="text-[var(--sl)] mt-24"
+        style={{ background: LOGO_BG }}
+      >
         <div className="mx-auto max-w-7xl px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div
-              className="text-2xl tracking-widest text-[var(--wh)]"
-              style={{ fontFamily: 'Bebas Neue, sans-serif' }}
-            >
-              SCOPEIFY
-            </div>
+            <img
+              src="/Scopeify_Logo_Inversed_v2.png"
+              alt="Scopeify"
+              style={{ height: 40, width: 'auto', display: 'block' }}
+            />
             <p className="mt-3 text-sm text-[var(--sv)]">
               Commercial roofing reports, generated in minutes.
             </p>
@@ -96,7 +100,7 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
             <div className="text-xs uppercase tracking-widest text-[var(--sv)] mb-3">
               Contact
             </div>
-            <p className="text-sm">hello@scopeify.app</p>
+            <p className="text-sm">info.scopeify@gmail.com</p>
           </div>
         </div>
         <div className="border-t border-[var(--nm)]">

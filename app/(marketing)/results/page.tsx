@@ -72,8 +72,7 @@ export default function Page() {
             What contractors are saying about Scopeify
           </h1>
           <p className="mt-6 text-lg text-[var(--sl)] max-w-2xl">
-            Real estimators, real shops, real numbers — from solo contractors to
-            multi-state roofing groups running hundreds of bids a month.
+            Scopeify is trusted by real commercial roofers. Here are some of our reviews.
           </p>
         </div>
       </section>
@@ -81,10 +80,10 @@ export default function Page() {
       <section className="bg-[var(--fg)] border-y border-[var(--rl)]">
         <div className="mx-auto max-w-7xl px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
-            ['38%', 'Avg. faster bid turnaround'],
+            ['38%', 'Average faster bid turnaround'],
             ['3.1×', 'More proposals per estimator'],
-            ['+9 pts', 'Avg. close-rate lift'],
-            ['600+', 'Roofing companies on Scopeify'],
+            ['30%', 'Average close-rate lift'],
+            ['150+', 'Roofing Companies using Scopeify'],
           ].map(([n, l]) => (
             <div key={l}>
               <div

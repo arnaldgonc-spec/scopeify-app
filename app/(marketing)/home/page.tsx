@@ -53,7 +53,7 @@ export default function HomePage() {
                 href="/login"
                 className="px-6 py-3 bg-[var(--sv)] text-[var(--nd)] font-semibold hover:bg-[var(--sl)] transition-colors"
               >
-                Start free trial
+                Get Started — 2-Month Money-Back Guarantee
               </Link>
               <Link
                 href="/products"
@@ -67,7 +67,7 @@ export default function HomePage() {
               <span className="w-px h-3 bg-[var(--nm)]" />
               <span>Cancel anytime</span>
               <span className="w-px h-3 bg-[var(--nm)]" />
-              <span>SOC 2 in progress</span>
+              <span>2-Month Money-Back Guarantee</span>
             </div>
           </div>
           <div className="md:col-span-5">
@@ -111,12 +111,11 @@ export default function HomePage() {
       </section>
 
       <section className="bg-[var(--fg)] border-y border-[var(--rl)]">
-        <div className="mx-auto max-w-7xl px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8 items-center text-center">
+        <div className="mx-auto max-w-7xl px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-center justify-items-center">
           {[
             ['12,400+', 'Proposals generated'],
-            ['$1.8B', 'Roofing work scoped'],
-            ['38 min', 'Avg time saved per job'],
-            ['96%', 'Estimator approval rate'],
+            ['56 min', 'Average time saved per job'],
+            ['82%', 'Estimator approval rate'],
           ].map(([n, l]) => (
             <div key={l}>
               <div
@@ -148,7 +147,6 @@ export default function HomePage() {
         <div className="mt-12 grid md:grid-cols-3 gap-6">
           {FEATURES.map((f) => (
             <div key={f.title} className="bg-[var(--wh)] border border-[var(--rl)] p-6">
-              <div className="w-10 h-10 bg-[var(--nd)] hex-clip mb-4" />
               <h3 className="text-lg font-semibold text-[var(--nd)]">{f.title}</h3>
               <p className="mt-2 text-sm text-[var(--ir)] leading-relaxed">{f.body}</p>
             </div>
@@ -166,7 +164,8 @@ export default function HomePage() {
               Try it on your next bid
             </h2>
             <p className="mt-3 text-[var(--sl)] max-w-xl">
-              Spin up a proposal in under five minutes. No setup, no sales call.
+              Spin up a proposal in under five minutes. No setup, no sales call —
+              and a full 2-month money-back guarantee if it isn't for you.
             </p>
           </div>
           <div className="flex gap-3">
@@ -174,7 +173,7 @@ export default function HomePage() {
               href="/login"
               className="px-6 py-3 bg-[var(--sv)] text-[var(--nd)] font-semibold hover:bg-[var(--sl)]"
             >
-              Start free trial
+              Get Started
             </Link>
             <Link
               href="/products"
