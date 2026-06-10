@@ -3,6 +3,11 @@ import { createClient } from '@supabase/supabase-js';
 import { readFileSync } from 'fs';
 import path from 'path';
 
+// Headless Chromium must run on the Node runtime, and a PDF render routinely
+// takes longer than Vercel's default 10s function timeout.
+export const runtime = 'nodejs';
+export const maxDuration = 60;
+
 export async function POST(request: Request) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

@@ -1,11 +1,15 @@
-import Link from 'next/link';
+'use client';
 
-export const metadata = { title: 'Products & Pricing — Scopeify' };
+import Link from 'next/link';
+import { useState } from 'react';
+
+type Billing = 'monthly' | 'yearly';
 
 const PLANS = [
   {
     name: 'PDF Generator',
-    price: 99,
+    monthly: 99,
+    yearly: 89,
     tagline: 'For solo contractors who just need a polished deliverable.',
     features: [
       'Unlimited branded PDF proposals',
@@ -15,11 +19,13 @@ const PLANS = [
       'Up to 25 proposals / month',
     ],
     cta: 'Start with PDF',
-    highlight: false,
+    ctaClass: 'pcta ghost2',
+    hot: false,
   },
   {
     name: 'Quick Estimation',
-    price: 149,
+    monthly: 149,
+    yearly: 129,
     tagline: 'Everything in PDF, plus instant ballpark pricing for fast bids.',
     features: [
       'Everything in PDF Generator',
@@ -29,11 +35,13 @@ const PLANS = [
       'Up to 75 proposals / month',
     ],
     cta: 'Pick Quick Estimation',
-    highlight: true,
+    ctaClass: 'pcta solid',
+    hot: true,
   },
   {
     name: 'Full Assessment',
-    price: 249,
+    monthly: 249,
+    yearly: 229,
     tagline: 'For estimating teams running real volume on commercial roofs.',
     features: [
       'Everything in Quick Estimation',
@@ -43,88 +51,111 @@ const PLANS = [
       'Unlimited proposals + priority support',
     ],
     cta: 'Go Full Assessment',
-    highlight: false,
+    ctaClass: 'pcta ghost2',
+    hot: false,
   },
-];
+] as const;
 
-export default function Page() {
+export default function ProductsPage() {
+  const [billing, setBilling] = useState<Billing>('monthly');
+
   return (
     <>
-      <section className="bg-[var(--nd)] text-[var(--wh)]">
-        <div className="mx-auto max-w-7xl px-6 py-20 text-center">
-          <div className="text-xs uppercase tracking-widest text-[var(--sv)]">
+      <section className="dark products-hero ticks">
+        <span className="t3" />
+        <span className="t4" />
+        <div className="grid-bg" />
+        <div className="vignette" />
+        <div
+          className="wrap"
+          style={{
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <span className="eyebrow rv">
+            <span className="ln" />
             Products
-          </div>
-          <h1
-            className="mt-4 text-5xl md:text-6xl"
-            style={{ fontFamily: 'Bebas Neue, sans-serif' }}
-          >
-            Pick the plan that fits how you bid
-          </h1>
-          <p className="mt-5 text-[var(--sl)] max-w-2xl mx-auto">
+            <span className="ln" />
+          </span>
+          <h1 className="ph rv">Pick the plan that fits how you bid</h1>
+          <p className="phlead rv">
             Month-to-month, cancel anytime. Every plan includes the full PDF
             generator — pick the level of estimating muscle you need on top.
           </p>
-          <p className="mt-4 text-[var(--sv)] max-w-2xl mx-auto text-sm">
-            Backed by our <span className="text-[var(--wh)] font-semibold">2-Month 100% Money-Back Guarantee</span> — if you don't love it, we'll refund every cent.
+          <p className="guarantee rv">
+            Backed by our <b>2-Month 100% Money-Back Guarantee</b> — if you
+            don&apos;t love it, we&apos;ll refund every cent.
           </p>
+          <div className="toggle rv">
+            <button
+              id="bm"
+              className={billing === 'monthly' ? 'on' : undefined}
+              onClick={() => setBilling('monthly')}
+            >
+              Monthly
+            </button>
+            <button
+              id="by"
+              className={billing === 'yearly' ? 'on' : undefined}
+              onClick={() => setBilling('yearly')}
+            >
+              Yearly
+            </button>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 -mt-12 pb-24">
-        <div className="grid md:grid-cols-3 gap-6">
-          {PLANS.map((p) => (
-            <div
-              key={p.name}
-              className={`p-8 flex flex-col border ${
-                p.highlight
-                  ? 'bg-[var(--wh)] border-[var(--nd)] shadow-2xl md:-translate-y-4'
-                  : 'bg-[var(--wh)] border-[var(--rl)]'
-              }`}
-            >
-              {p.highlight && (
-                <div className="self-start mb-4 px-2 py-1 bg-[var(--nd)] text-[var(--wh)] text-[10px] uppercase tracking-widest">
-                  Most popular
+      <section className="price-section">
+        <div className="wrap">
+          <div className="price-grid rv">
+            {PLANS.map((p) => {
+              const price = billing === 'yearly' ? p.yearly : p.monthly;
+              const note =
+                billing === 'yearly'
+                  ? `Billed yearly · $${p.yearly * 12}/yr`
+                  : 'Billed monthly';
+              const savePct = Math.round(
+                ((p.monthly - p.yearly) / p.monthly) * 100,
+              );
+              return (
+                <div key={p.name} className={p.hot ? 'plan hot' : 'plan'}>
+                  <div
+                    className="pn"
+                    style={p.hot ? { marginTop: '18px' } : undefined}
+                  >
+                    {p.name}
+                  </div>
+                  <div className="pt">{p.tagline}</div>
+                  <div className="pr">
+                    <span className="amt">${price}</span>
+                    <span className="per">/month</span>
+                    <span
+                      className="save"
+                      style={{
+                        display: billing === 'yearly' ? 'inline-block' : 'none',
+                      }}
+                    >
+                      {billing === 'yearly' ? `Save ${savePct}%` : ''}
+                    </span>
+                  </div>
+                  <div className="billing-note">{note}</div>
+                  <ul>
+                    {p.features.map((f) => (
+                      <li key={f}>
+                        <span className="tick" /> {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link className={p.ctaClass} href="/payment">
+                    {p.cta}
+                  </Link>
                 </div>
-              )}
-              <div
-                className="text-2xl text-[var(--nd)] tracking-wide"
-                style={{ fontFamily: 'Bebas Neue, sans-serif' }}
-              >
-                {p.name}
-              </div>
-              <p className="mt-2 text-sm text-[var(--ir)] min-h-[3rem]">
-                {p.tagline}
-              </p>
-              <div className="mt-6 flex items-baseline gap-1">
-                <span
-                  className="text-6xl text-[var(--nd)]"
-                  style={{ fontFamily: 'Bebas Neue, sans-serif' }}
-                >
-                  ${p.price}
-                </span>
-                <span className="text-sm text-[var(--ir)]">/month</span>
-              </div>
-              <ul className="mt-6 space-y-3 text-sm text-[var(--ink)] flex-1">
-                {p.features.map((f) => (
-                  <li key={f} className="flex gap-3">
-                    <span className="mt-1.5 w-1.5 h-1.5 bg-[var(--nd)] shrink-0" />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/login"
-                className={`mt-8 text-center py-3 font-semibold ${
-                  p.highlight
-                    ? 'bg-[var(--nd)] text-[var(--wh)] hover:bg-[var(--nm)]'
-                    : 'bg-[var(--fg)] text-[var(--nd)] border border-[var(--rl)] hover:bg-[var(--sl)]'
-                }`}
-              >
-                {p.cta}
-              </Link>
-            </div>
-          ))}
+              );
+            })}
+          </div>
         </div>
       </section>
     </>

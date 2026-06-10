@@ -16,7 +16,17 @@
       "Bash(git restore *)",
       "Bash(git commit *)",
       "Bash(curl *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(Start-Sleep -Seconds 5)",
+      "Bash(Get-Content \"C:\\\\Users\\\\Arnaldo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-Arnaldo-Documents-Arnaldo-Trabalho-scopeify-app\\\\02cc1fd7-ecec-4db8-81b8-8f77eadcd306\\\\tasks\\\\b1ib9wgod.output\" -Tail 20)",
+      "Bash(python *)",
+      "Bash(curl -s http://localhost:3000/home)",
+      "Read(//tmp/**)",
+      "Bash(grep -oE \"Monthly|Yearly|\\\\\\\\\\\\$89|\\\\\\\\\\\\$129|\\\\\\\\\\\\$229|\\\\\\\\\\\\$99|\\\\\\\\\\\\$149|\\\\\\\\\\\\$249|Save [0-9]+%\" /tmp/products.html)",
+      "Bash(grep -oE '[^>]{0,40}>Results<[^<]{0,40}' /tmp/results.html)",
+      "Bash(grep -oE '\\\\$\\(89|99|129|149|229|249\\)\\\\b' /tmp/products.html)",
+      "Bash(grep -oE '\\\\$[0-9]{2,4}\\(\\\\/yr|/month|\\)?' /tmp/products.html)",
+      "Bash(grep *)"
     ]
   }
 }
