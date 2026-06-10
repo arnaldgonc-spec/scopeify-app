@@ -6,5 +6,5 @@ export default async function Home() {
   const supabase = await createServerSupabaseClient();
   const { data: { session } } = await supabase.auth.getSession();
   if (session) redirect('/dashboard');
-  redirect('/login');
+  redirect('/home');
 }
