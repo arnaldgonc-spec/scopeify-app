@@ -1,11 +1,21 @@
 import { NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { checkAccessForUser } from '@/lib/billing';
 import type { FormState } from '@/lib/types';
 
 export async function POST(request: Request) {
   try {
-    const formState: FormState = await request.json();
+    // Gate behind an active subscription/trial — this burns LLM credits.
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+    const access = await checkAccessForUser(supabase, user.id);
+    if (!access.ok) return NextResponse.json({ error: 'no_subscription' }, { status: 402 });
+
+    const formState: FormState & { photo_findings?: string[] } = await request.json();
     const { company, roof_data, scope_data, property_address, property_city, property_state, property_type, client_name } = formState;
+    const photoFindings = Array.isArray(formState.photo_findings) ? formState.photo_findings : [];
     const area = roof_data?.area_sqft ?? 0;
     const squares = Math.round(area / 100);
     const membrane = scope_data?.new_membrane_type ?? 'TPO';
@@ -41,7 +51,11 @@ Parapet: ${roof_data?.parapet_lf ?? 0} LF | Access: ${roof_data?.access ?? 'Inte
 Work: ${scope_data?.work_types?.join(', ') ?? 'Full Tear-Off & Replacement'}
 New Membrane: ${membrane} | Attachment: ${scope_data?.attachment_method ?? 'Fully Adhered'}
 Insulation: ${scope_data?.insulation_r_value ?? 'R-15, 2.5in polyiso'}
-Duration: ${scope_data?.estimated_duration ?? '1-2 weeks'} | Deck Allowance: ${scope_data?.deck_allowance_sqft ?? 0} sq ft`;
+Duration: ${scope_data?.estimated_duration ?? '1-2 weeks'} | Deck Allowance: ${scope_data?.deck_allowance_sqft ?? 0} sq ft${
+      photoFindings.length
+        ? `\n\nAI Photo Findings (incorporate the most relevant into the narrative and scope):\n${photoFindings.map((f) => `- ${f}`).join('\n')}`
+        : ''
+    }`;
 
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY! });
 

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { serviceClient } from '@/lib/billing';
 
 export async function DELETE(
   _request: Request,
@@ -9,13 +9,11 @@ export async function DELETE(
   const { id } = await params;
 
   const supabaseAuth = await createServerSupabaseClient();
-  const { data: { session } } = await supabaseAuth.auth.getSession();
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  // getUser() validates the JWT against Supabase; getSession() only reads the cookie.
+  const { data: { user } } = await supabaseAuth.auth.getUser();
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const supabase = serviceClient();
 
   // Verify ownership via company
   const { data: proposal } = await supabase
@@ -30,7 +28,7 @@ export async function DELETE(
     .from('companies')
     .select('id')
     .eq('id', proposal.company_id)
-    .eq('user_id', session.user.id)
+    .eq('user_id', user.id)
     .single();
 
   if (!company) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });

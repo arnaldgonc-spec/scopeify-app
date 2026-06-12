@@ -149,7 +149,7 @@ export default function ProductsPage() {
                       </li>
                     ))}
                   </ul>
-                  <Link className={p.ctaClass} href="/payment">
+                  <Link className={p.ctaClass} href="/signup">
                     {p.cta}
                   </Link>
                 </div>

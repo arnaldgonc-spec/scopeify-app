@@ -7,10 +7,10 @@ import type { Proposal, Company } from '@/lib/types';
 
 export default async function AllProposalsPage() {
   const supabase = await createServerSupabaseClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/login');
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/login');
 
-  const { data: company } = await supabase.from('companies').select('*').eq('user_id', session.user.id).single();
+  const { data: company } = await supabase.from('companies').select('*').eq('user_id', user.id).single();
   if (!company) redirect('/onboarding');
 
   const { data: proposals } = await supabase

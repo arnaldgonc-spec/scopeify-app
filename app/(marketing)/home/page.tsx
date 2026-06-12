@@ -28,7 +28,7 @@ export default function HomePage() {
                 Built for the way commercial roofing actually gets sold.
               </p>
               <div className="cta-row rv">
-                <Link className="btn btn-primary lg" href="/payment">
+                <Link className="btn btn-primary lg" href="/signup">
                   Get Started <span className="ar">→</span>
                 </Link>
                 <Link className="btn btn-out" href="/products">
@@ -380,7 +380,7 @@ export default function HomePage() {
                   <span className="tick" /> Up to 25 proposals / month
                 </li>
               </ul>
-              <Link className="pcta ghost2" href="/payment">
+              <Link className="pcta ghost2" href="/signup">
                 Start with PDF
               </Link>
             </div>
@@ -410,7 +410,7 @@ export default function HomePage() {
                   <span className="tick" /> Up to 75 proposals / month
                 </li>
               </ul>
-              <Link className="pcta solid" href="/payment">
+              <Link className="pcta solid" href="/signup">
                 Pick Quick Estimation
               </Link>
             </div>
@@ -438,7 +438,7 @@ export default function HomePage() {
                   support
                 </li>
               </ul>
-              <Link className="pcta ghost2" href="/payment">
+              <Link className="pcta ghost2" href="/signup">
                 Go Full Assessment
               </Link>
             </div>
@@ -498,7 +498,7 @@ export default function HomePage() {
             </p>
           </div>
           <div className="cta-row" style={{ margin: 0 }}>
-            <Link className="btn btn-primary lg" href="/payment">
+            <Link className="btn btn-primary lg" href="/signup">
               Get Started <span className="ar">→</span>
             </Link>
             <Link className="btn btn-out" href="/products">

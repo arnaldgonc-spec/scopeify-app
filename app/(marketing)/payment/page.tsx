@@ -16,8 +16,8 @@ export default function PaymentPage() {
           Almost there
         </h1>
         <p className="mt-6 text-lg text-[var(--sl)]">
-          Card payments are coming online shortly. In the meantime, pick a plan
-          on the pricing page and we&apos;ll get you set up directly.
+          Start with a 14-day free trial — no card required. Create your account
+          and choose a plan from your dashboard any time.
         </p>
         <p className="mt-4 text-sm text-[var(--sv)]">
           Backed by our{' '}
@@ -33,12 +33,12 @@ export default function PaymentPage() {
           >
             See plans
           </Link>
-          <a
-            href="mailto:info.scopeify@gmail.com?subject=Scopeify%20subscription"
+          <Link
+            href="/signup"
             className="px-6 py-3 border border-[var(--nm)] text-[var(--sl)] hover:bg-[var(--nm)] transition-colors"
           >
-            Email us to subscribe
-          </a>
+            Start free trial
+          </Link>
         </div>
       </div>
     </section>

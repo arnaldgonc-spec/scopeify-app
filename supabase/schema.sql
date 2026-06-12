@@ -154,3 +154,11 @@ $$ language plpgsql;
 create trigger proposals_updated_at
   before update on proposals
   for each row execute function update_updated_at();
+
+-- ───────────────────────────────────────────────────────────────
+-- Feature migrations. Run these (idempotent) in order after the above:
+--   supabase/migrations/001_material_prices.sql   (weekly price DB)
+--   supabase/migrations/002_photo_analysis.sql    (AI photo analysis)
+--   supabase/migrations/003_report_templates.sql  (report templates)
+--   supabase/migrations/004_billing.sql           (Stripe billing)
+-- ───────────────────────────────────────────────────────────────

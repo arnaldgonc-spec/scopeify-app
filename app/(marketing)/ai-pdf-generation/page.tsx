@@ -26,7 +26,7 @@ export default function AiPdfGenerationPage() {
             Scopeify in under five minutes, in your branding, ready to send.
           </p>
           <div className="cta-row rv" style={{ marginTop: '30px' }}>
-            <Link className="btn btn-primary lg" href="/payment">
+            <Link className="btn btn-primary lg" href="/signup">
               Try it now <span className="ar">→</span>
             </Link>
             <Link className="btn btn-out" href="/products">
@@ -234,7 +234,7 @@ export default function AiPdfGenerationPage() {
             </p>
           </div>
           <div className="cta-row" style={{ margin: 0 }}>
-            <Link className="btn btn-primary lg" href="/payment">
+            <Link className="btn btn-primary lg" href="/signup">
               Try it now — 2-Month Money-Back Guarantee{' '}
               <span className="ar">→</span>
             </Link>

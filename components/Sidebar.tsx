@@ -39,12 +39,42 @@ export default function Sidebar({ company }: Props) {
       ),
     },
     {
+      id: 'templates',
+      label: 'Templates',
+      href: '/templates',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="15" height="15">
+          <rect x="3" y="3" width="18" height="18" rx="1" /><path d="M3 9h18M9 21V9" />
+        </svg>
+      ),
+    },
+    {
       id: 'history',
       label: 'All Proposals',
       href: '/proposals',
       icon: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="15" height="15">
           <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      ),
+    },
+    {
+      id: 'billing',
+      label: 'Billing',
+      href: '/billing',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="15" height="15">
+          <rect x="2" y="5" width="20" height="14" rx="2" /><path d="M2 10h20" />
+        </svg>
+      ),
+    },
+    {
+      id: 'prices',
+      label: 'Price Database',
+      href: '/admin/prices',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="15" height="15">
+          <path d="M3 3v18h18" /><path d="M7 14l4-4 3 3 5-6" />
         </svg>
       ),
     },
@@ -99,10 +129,10 @@ export default function Sidebar({ company }: Props) {
         })}
 
         <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.18)', padding: '0 20px', marginBottom: 4, marginTop: 16 }}>
-          History
+          Workspace
         </div>
         {links.slice(2).map((link) => {
-          const isActive = pathname === link.href;
+          const isActive = pathname === link.href || (link.href !== '/dashboard' && pathname.startsWith(link.href));
           return (
             <div
               key={link.id}

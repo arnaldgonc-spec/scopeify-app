@@ -42,7 +42,7 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
             <Link className="ghost" href="/login">
               Sign in
             </Link>
-            <Link className="btn btn-primary" href="/products">
+            <Link className="btn btn-primary" href="/signup">
               Get Started <span className="ar">→</span>
             </Link>
           </div>

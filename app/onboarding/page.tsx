@@ -38,6 +38,8 @@ export default function OnboardingPage() {
       }
 
       await supabase.from('companies').insert({ ...form, user_id: user.id, certifications: certs, logo_url });
+      // Provision a 14-day trial so the user can start immediately.
+      try { await fetch('/api/billing/start-trial', { method: 'POST' }); } catch {}
       router.push('/dashboard');
     } finally {
       setLoading(false);
@@ -62,12 +64,12 @@ export default function OnboardingPage() {
           <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--sv)', marginBottom: 20 }}>Step 1 of 1 – Your Business</div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
-            <F label="Company Name *" span={2}><input value={form.name} onChange={(e) => set('name', e.target.value)} placeholder="Apex Commercial Roofing" /></F>
-            <F label="Owner / Contact Name *"><input value={form.owner_name} onChange={(e) => set('owner_name', e.target.value)} placeholder="James Whitfield" /></F>
-            <F label="License Number"><input value={form.license_number} onChange={(e) => set('license_number', e.target.value)} placeholder="RC-10492" /></F>
-            <F label="Email *"><input type="email" value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="james@example.com" /></F>
-            <F label="Phone *"><input type="tel" value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="(312) 555-0000" /></F>
-            <F label="City"><input value={form.city} onChange={(e) => set('city', e.target.value)} placeholder="Chicago" /></F>
+            <F label="Company Name *" span={2}><input autoComplete="off" value={form.name} onChange={(e) => set('name', e.target.value)} placeholder="Apex Commercial Roofing" /></F>
+            <F label="Owner / Contact Name *"><input autoComplete="off" value={form.owner_name} onChange={(e) => set('owner_name', e.target.value)} placeholder="James Whitfield" /></F>
+            <F label="License Number"><input autoComplete="off" value={form.license_number} onChange={(e) => set('license_number', e.target.value)} placeholder="RC-10492" /></F>
+            <F label="Email *"><input type="email" autoComplete="off" value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="james@example.com" /></F>
+            <F label="Phone *"><input type="tel" autoComplete="off" value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="(312) 555-0000" /></F>
+            <F label="City"><input autoComplete="off" value={form.city} onChange={(e) => set('city', e.target.value)} placeholder="Chicago" /></F>
             <F label="State"><select value={form.state} onChange={(e) => set('state', e.target.value)}>{STATES.map((s) => <option key={s}>{s}</option>)}</select></F>
           </div>
 
@@ -93,6 +95,9 @@ export default function OnboardingPage() {
             </div>
           </div>
 
+          <div style={{ fontSize: 12, color: 'var(--sv)', fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
+            Your 14-day free trial starts when you save — no card required.
+          </div>
           <button onClick={save} disabled={loading} style={{ width: '100%', fontFamily: "'Barlow', sans-serif", fontSize: 13, fontWeight: 600, padding: '11px 22px', border: 'none', cursor: loading ? 'default' : 'pointer', letterSpacing: '0.04em', background: 'var(--nv)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
             {loading ? 'Saving...' : 'Save & Go to Dashboard →'}
           </button>

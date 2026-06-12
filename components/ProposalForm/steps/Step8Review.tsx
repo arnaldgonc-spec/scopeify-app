@@ -1,13 +1,36 @@
 'use client';
+import { useState, useEffect } from 'react';
 import type { FormState } from '@/lib/types';
+import { PRESETS } from '@/lib/templates/presets';
 
 interface Props {
   state: FormState;
+  onChange: (p: Partial<FormState>) => void;
   onGoTo: (n: number) => void;
   onGenerate: () => void;
 }
 
-export default function Step8Review({ state, onGoTo, onGenerate }: Props) {
+interface CustomTemplate { id: string; name: string; }
+
+export default function Step8Review({ state, onChange, onGoTo, onGenerate }: Props) {
+  const [customTemplates, setCustomTemplates] = useState<CustomTemplate[]>([]);
+
+  useEffect(() => {
+    import('@/lib/supabase/client').then(({ createClient }) => {
+      const supabase = createClient();
+      supabase.from('report_templates').select('id, name').then(({ data }) => {
+        if (data) setCustomTemplates(data as CustomTemplate[]);
+      });
+    });
+  }, []);
+
+  // Selected template: prefer custom id, else preset key.
+  const selectedValue = state.template_id ? `custom:${state.template_id}` : `preset:${state.template_preset ?? 'classic'}`;
+  function selectTemplate(value: string) {
+    if (value.startsWith('custom:')) onChange({ template_id: value.slice(7), template_preset: null });
+    else onChange({ template_id: null, template_preset: value.slice(7) });
+  }
+
   const price = state.final_price
     ? '$' + state.final_price.toLocaleString()
     : state.ai_estimate_low && state.ai_estimate_high
@@ -78,6 +101,35 @@ export default function Step8Review({ state, onGoTo, onGenerate }: Props) {
             </div>
           ))}
         </div>
+      </Section>
+
+      <Section label="Report Template">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 10 }}>
+          {PRESETS.map((p) => {
+            const value = `preset:${p.id}`;
+            const on = selectedValue === value;
+            return (
+              <div key={p.id} onClick={() => selectTemplate(value)} style={{ border: `1.5px solid ${on ? 'var(--nv)' : 'var(--rl)'}`, background: on ? 'rgba(27,42,94,0.04)' : 'var(--wh)', cursor: 'pointer', overflow: 'hidden' }}>
+                <div style={{ height: 8, background: p.definition.theme.primary, position: 'relative' }}>
+                  <div style={{ position: 'absolute', inset: 0, width: '40%', background: p.definition.theme.accent }} />
+                </div>
+                <div style={{ padding: '10px 14px' }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--nd)' }}>{p.name}{on ? ' ✓' : ''}</div>
+                  <div style={{ fontSize: 11, color: 'var(--mt)', lineHeight: 1.4 }}>{p.description}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {customTemplates.length > 0 && (
+          <div style={{ marginTop: 12 }}>
+            <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ir)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Your custom templates</label>
+            <select value={state.template_id ? `custom:${state.template_id}` : ''} onChange={(e) => e.target.value && selectTemplate(e.target.value)} style={{ width: '100%', fontFamily: "'Barlow', sans-serif", fontSize: 13, padding: '9px 11px', border: '1.5px solid var(--rl)' }}>
+              <option value="">— Use a preset above —</option>
+              {customTemplates.map((c) => <option key={c.id} value={`custom:${c.id}`}>{c.name}</option>)}
+            </select>
+          </div>
+        )}
       </Section>
 
       {/* Generate CTA */}

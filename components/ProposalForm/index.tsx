@@ -58,6 +58,8 @@ function proposalToFormState(p: Proposal, company: Partial<Company>): FormState 
     valid_days: p.valid_days || 30,
     invoice_terms: p.invoice_terms || 'Net-15',
     credit_card_accepted: p.credit_card_accepted || 'Yes – 3% fee',
+    template_preset: p.template_preset ?? null,
+    template_id: p.template_id ?? null,
   };
 }
 import StepSidebar from './StepSidebar';
@@ -117,6 +119,8 @@ function defaultState(path: ProposalPath): FormState {
     valid_days: 30,
     invoice_terms: 'Net-15',
     credit_card_accepted: 'Yes – 3% fee',
+    template_preset: 'classic',
+    template_id: null,
   };
 }
 
@@ -232,11 +236,20 @@ export default function ProposalForm({ path, company: initialCompany, existingPr
         ? await fileToBase64(formState.coverPhotoFile)
         : (formState.coverPhotoBase64 ?? null);
 
+      // 2b. Summarize AI photo findings for the scope prompt + aggregate condition score
+      const analyzedPhotos = formState.photos.filter((p) => p.analysis?.is_roof_photo);
+      const photoConditionScore = analyzedPhotos.length
+        ? Math.round(analyzedPhotos.reduce((s, p) => s + (p.analysis?.condition_score ?? 0), 0) / analyzedPhotos.length)
+        : null;
+      const photoFindings = analyzedPhotos.map((p) =>
+        `${p.slot_label}: ${p.analysis?.severity} — ${(p.analysis?.damage_types || []).join(', ') || 'no major damage'}. ${p.analysis?.observations ?? ''}`.trim()
+      );
+
       // 3. Generate scope via AI (strip cover photo base64 — too large to send to AI)
       const scopeRes = await fetch('/api/generate-scope', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formState, coverPhotoBase64: undefined, scope_data: { ...formState.scope_data, _cover_photo_b64: undefined }, ai_estimate_low: ai_low, ai_estimate_high: ai_high }),
+        body: JSON.stringify({ ...formState, photos: undefined, photo_findings: photoFindings, coverPhotoBase64: undefined, scope_data: { ...formState.scope_data, _cover_photo_b64: undefined }, ai_estimate_low: ai_low, ai_estimate_high: ai_high }),
       });
       if (!scopeRes.ok) throw new Error('Scope generation failed');
       const { narrative, line_items } = await scopeRes.json();
@@ -317,11 +330,14 @@ export default function ProposalForm({ path, company: initialCompany, existingPr
         ai_estimate_high: ai_high,
         final_price: formState.final_price || (lineItemsTotal > 0 ? lineItemsTotal : null) || (formState.price_source === 'ai' && ai_high ? Math.round((ai_low! + ai_high) / 2) : null),
         price_source: formState.price_source,
+        photo_condition_score: photoConditionScore,
         payment_terms: { deposit_pct: 30, deposit_note: 'Due at signing', progress_pct: 40, progress_note: 'Upon tear-off completion', final_pct: 30, final_note: 'Upon substantial completion', ...formState.payment_terms },
         warranty_data: formState.warranty_data,
         valid_days: formState.valid_days,
         invoice_terms: formState.invoice_terms,
         credit_card_accepted: formState.credit_card_accepted,
+        template_preset: formState.template_id ? null : (formState.template_preset ?? 'classic'),
+        template_id: formState.template_id ?? null,
         notes: formState.scope_data.notes || '',
       };
 
@@ -351,6 +367,9 @@ export default function ProposalForm({ path, company: initialCompany, existingPr
               caption: photo.caption,
               slot_label: photo.slot_label,
               sort_order: i,
+              analysis: photo.analysis ?? null,
+              analysis_status: photo.analysis_status ?? 'pending',
+              ai_caption: photo.analysis?.suggested_caption ?? null,
             });
           }
         }
@@ -389,7 +408,7 @@ export default function ProposalForm({ path, company: initialCompany, existingPr
       case 5: return <Step5Photos state={formState} onChange={patch} path={path} />;
       case 6: return <Step6Pricing state={formState} onChange={patch} path={path} />;
       case 7: return <Step7Warranty state={formState} onChange={patch} />;
-      case 8: return <Step8Review state={formState} onGoTo={goToStep} onGenerate={handleGenerate} />;
+      case 8: return <Step8Review state={formState} onChange={patch} onGoTo={goToStep} onGenerate={handleGenerate} />;
       default: return null;
     }
   }

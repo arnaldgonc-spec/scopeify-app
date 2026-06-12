@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 import { redirect } from 'next/navigation';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import ProposalForm from '@/components/ProposalForm';
+import { serviceClient, getSubscriptionForCompany, hasActiveAccess } from '@/lib/billing';
 import type { ProposalPath, Company, Proposal } from '@/lib/types';
 
 interface Props {
@@ -12,16 +13,20 @@ export default async function BuildPage({ searchParams }: Props) {
   const params = await searchParams;
 
   const supabase = await createServerSupabaseClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/login');
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/login');
 
   const { data: company } = await supabase
     .from('companies')
     .select('*')
-    .eq('user_id', session.user.id)
+    .eq('user_id', user.id)
     .single();
 
   if (!company) redirect('/onboarding');
+
+  // Subscription gate: trialing or active companies only.
+  const sub = await getSubscriptionForCompany(serviceClient(), company.id);
+  if (!hasActiveAccess(sub)) redirect('/billing?status=required');
 
   // Edit mode: load existing proposal
   let existingProposal: Proposal | null = null;

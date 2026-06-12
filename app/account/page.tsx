@@ -7,13 +7,13 @@ import type { Company } from '@/lib/types';
 
 export default async function AccountPage() {
   const supabase = await createServerSupabaseClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/login');
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/login');
 
   const { data: company } = await supabase
     .from('companies')
     .select('*')
-    .eq('user_id', session.user.id)
+    .eq('user_id', user.id)
     .single();
 
   if (!company) redirect('/onboarding');

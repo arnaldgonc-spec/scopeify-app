@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { redirect } from 'next/navigation';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { serviceClient, getSubscriptionForCompany, trialDaysLeft } from '@/lib/billing';
 import Sidebar from '@/components/Sidebar';
 import StatsRow from '@/components/Dashboard/StatsRow';
 import ProposalCard from '@/components/Dashboard/ProposalCard';
@@ -9,13 +10,13 @@ import type { Proposal, Company } from '@/lib/types';
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabaseClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) redirect('/login');
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/login');
 
   const { data: company } = await supabase
     .from('companies')
     .select('*')
-    .eq('user_id', session.user.id)
+    .eq('user_id', user.id)
     .single();
 
   if (!company) redirect('/onboarding');
@@ -28,6 +29,9 @@ export default async function DashboardPage() {
 
   const proposalList = (proposals || []) as Proposal[];
 
+  const sub = await getSubscriptionForCompany(serviceClient(), company.id);
+  const daysLeft = trialDaysLeft(sub);
+
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       <Sidebar company={company as Company} />
@@ -38,9 +42,16 @@ export default async function DashboardPage() {
             <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 20, fontWeight: 700, color: 'var(--nd)', letterSpacing: '0.05em', textTransform: 'uppercase', lineHeight: 1 }}>Dashboard</div>
             <div style={{ fontSize: 12, color: 'var(--mt)', marginTop: 3, fontWeight: 300 }}>{company.name} · {company.city}, {company.state}</div>
           </div>
-          <a href="/proposals/new" style={{ fontFamily: "'Barlow', sans-serif", fontSize: 13, fontWeight: 600, padding: '11px 22px', border: 'none', cursor: 'pointer', letterSpacing: '0.04em', background: 'var(--nv)', color: '#fff', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 7 }}>
-            + New Proposal
-          </a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            {daysLeft !== null && (
+              <a href="/billing" style={{ fontFamily: "'Barlow', sans-serif", fontSize: 12, fontWeight: 600, padding: '7px 14px', textDecoration: 'none', background: 'rgba(180,200,220,0.18)', border: '1px solid var(--sv)', color: 'var(--nd)', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                {daysLeft > 0 ? `Free trial — ${daysLeft} day${daysLeft === 1 ? '' : 's'} left` : 'Trial ended — choose a plan'}
+              </a>
+            )}
+            <a href="/proposals/new" style={{ fontFamily: "'Barlow', sans-serif", fontSize: 13, fontWeight: 600, padding: '11px 22px', border: 'none', cursor: 'pointer', letterSpacing: '0.04em', background: 'var(--nv)', color: '#fff', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 7 }}>
+              + New Proposal
+            </a>
+          </div>
         </div>
 
         <div style={{ padding: '36px 40px', flex: 1 }}>

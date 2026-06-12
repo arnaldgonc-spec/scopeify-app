@@ -94,6 +94,9 @@ export interface Proposal {
   final_price: number | null;
   price_source: 'ai' | 'manual';
   confidence_score: number | null;
+  photo_condition_score: number | null;
+  template_id: string | null;
+  template_preset: string | null;
   payment_terms: PaymentTerms;
   warranty_data: WarrantyData;
   valid_days: number;
@@ -105,6 +108,17 @@ export interface Proposal {
   updated_at: string;
 }
 
+export type PhotoSeverity = 'none' | 'low' | 'moderate' | 'severe';
+
+export interface PhotoAnalysis {
+  is_roof_photo: boolean;
+  damage_types: string[];
+  severity: PhotoSeverity;
+  condition_score: number;
+  suggested_caption: string;
+  observations: string;
+}
+
 export interface ProposalPhoto {
   id: string;
   proposal_id: string;
@@ -113,6 +127,17 @@ export interface ProposalPhoto {
   caption: string;
   slot_label: string;
   sort_order: number;
+  analysis: PhotoAnalysis | null;
+  analysis_status: 'pending' | 'done' | 'failed' | 'skipped';
+  ai_caption: string | null;
+}
+
+export interface FormPhoto {
+  file: File;
+  slot_label: string;
+  caption: string;
+  analysis?: PhotoAnalysis | null;
+  analysis_status?: 'pending' | 'done' | 'failed' | 'skipped';
 }
 
 export interface FormState {
@@ -131,7 +156,7 @@ export interface FormState {
   property_type: string;
   roof_data: Partial<RoofData>;
   scope_data: Partial<ScopeData>;
-  photos: { file: File; slot_label: string; caption: string }[];
+  photos: FormPhoto[];
   line_items: Partial<LineItem>[];
   final_price: number | null;
   price_source: 'ai' | 'manual';
@@ -142,4 +167,6 @@ export interface FormState {
   valid_days: number;
   invoice_terms: string;
   credit_card_accepted: string;
+  template_preset: string | null;
+  template_id: string | null;
 }
